@@ -3,22 +3,13 @@ import discord
 from discord.guild import Guild
 from discord.channel import TextChannel
 import string
-from pydantic_settings import BaseSettings, SettingsConfigDict
-import os
 
-from data_helper import get_download_link, read_json, File
 
-DOTENV = os.path.join(os.path.dirname(__file__), ".env")
 SERVER_NAME = "Dev Server"
 CHANNEL_NAME = "general"
 
 
 client = discord.Client(intents=discord.Intents.default())
-
-
-class Settings(BaseSettings):
-    token: str
-    model_config = SettingsConfigDict(env_file=DOTENV)
 
 
 def _clean_channel_name(name: str) -> str:
@@ -59,17 +50,18 @@ async def send_message(msg: str) -> None:
 @client.event
 async def on_ready():
     print("Started on_ready")
+    global update_messages
 
     try:
-        diff = read_json(File.UPDATED_RESULTS)
-        for result in diff:
-            msg = f"{result.title} (updated {result.last_updated}): {get_download_link(result.file)}"
+        for msg in update_messages:
             await send_message(msg)
     finally:
         print("Finished on_ready")
         await client.close()
 
 
-def post_updates():
-    settings = Settings()
-    client.run(settings.token)
+def post_updates(msgs: list[str], token: str):
+    global update_messages
+    update_messages = msgs
+
+    client.run(token)
