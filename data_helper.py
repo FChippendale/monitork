@@ -81,3 +81,4 @@ def compare_downloads(results: SearchResults) -> bool:
     write_json(File.UPDATED_RESULTS, changed_results)
 
     return len(changed_results) > 0
+

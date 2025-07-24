@@ -73,3 +73,4 @@ async def on_ready():
 def post_updates():
     settings = Settings()
     client.run(settings.token)
+    

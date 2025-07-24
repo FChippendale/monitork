@@ -6,3 +6,4 @@ if __name__ == "__main__":
     data = get_downloads()
     if compare_downloads(data):
         post_updates()
+
