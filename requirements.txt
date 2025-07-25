@@ -2,4 +2,4 @@ requests
 pydantic
 pydantic_settings
 discord
-pydantic_settings
+azure-cosmos
