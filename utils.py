@@ -15,7 +15,9 @@ def format_msgs(updates: SearchResults) -> list[str]:
 
     for update in updates:
         to_add = _format_msg(update)
-        if len(cur_msg) + len(to_add) > 1999: # stay within 2000 char limit for discord message
+        if (
+            len(cur_msg) + len(to_add) > 1999
+        ):  # stay within 2000 char limit for discord message
             msgs.append(cur_msg)
             cur_msg = to_add
             continue
