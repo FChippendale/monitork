@@ -4,7 +4,7 @@ from azure.cosmos.exceptions import (
     CosmosResourceExistsError,
 )
 
-from data_helper import SearchResultsModel, SearchResults
+from warcom_helper import SearchResultsModel, SearchResults
 
 
 class CosmosDBHelper:

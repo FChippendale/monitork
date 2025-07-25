@@ -1,4 +1,4 @@
-from data_helper import get_downloads, get_updated_downloads
+from warcom_helper import get_downloads, get_updated_downloads
 from discord_helper import post_updates
 from utils import format_msgs
 from pydantic_settings import BaseSettings, SettingsConfigDict
