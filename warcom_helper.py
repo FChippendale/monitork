@@ -8,7 +8,7 @@ class SearchResult(BaseModel):
     title: str
     created_at: str  # e.g. 11/12/2024
     last_updated: str  # e.g. 11/12/2024
-    new: bool
+    # new: bool  # commented out as was causing false positives. Not clear what it means to be marked as "new"
     file: str
     file_size: str
 
