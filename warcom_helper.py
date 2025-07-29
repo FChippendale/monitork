@@ -67,6 +67,12 @@ def get_updated_downloads(prev: SearchResults, new: SearchResults) -> SearchResu
 
     for item in new:
         if item not in prev:
+            print("Item updated:", item)
             updated.append(item)
+
+            # simple search to create better logs for items marked as updated
+            for prev_item in prev:
+                if prev_item.title == item.title:
+                    print("Prev item with matching title:", prev_item)
 
     return updated
