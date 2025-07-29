@@ -8,7 +8,7 @@ class SearchResult(BaseModel):
     title: str
     created_at: str  # e.g. 11/12/2024
     last_updated: str  # e.g. 11/12/2024
-    new: bool
+    # new: bool  # commented out as was causing false positives. Not clear what it means to be marked as "new"
     file: str
     file_size: str
 
@@ -67,6 +67,12 @@ def get_updated_downloads(prev: SearchResults, new: SearchResults) -> SearchResu
 
     for item in new:
         if item not in prev:
+            print("Item updated:", item)
             updated.append(item)
+
+            # simple search to create better logs for items marked as updated
+            for prev_item in prev:
+                if prev_item.title == item.title:
+                    print("Prev item with matching title:", prev_item)
 
     return updated
