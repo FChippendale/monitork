@@ -5,11 +5,13 @@ from discord.channel import TextChannel
 import string
 
 
-SERVER_NAME = "Dev Server"
-CHANNEL_NAME = "general"
-
-
 client = discord.Client(intents=discord.Intents.default())
+
+
+# <Server Name>: <Target Bot Channel Name>
+CONFIGURED_SERVERS: dict[str, str] = {
+    "Dev Server": "general",
+}
 
 
 def _clean_channel_name(name: str) -> str:
@@ -18,33 +20,46 @@ def _clean_channel_name(name: str) -> str:
     return clean_name
 
 
-def _get_target_guild(guilds: Sequence[Guild]) -> Guild:
-    for guild in guilds:
-        if guild.name == SERVER_NAME:
-            return guild
-
-    raise Exception("Could not find Try Hard Guild")
+def _get_target_guilds(guilds: Sequence[Guild]) -> list[Guild]:
+    return [guild for guild in guilds if guild.name in CONFIGURED_SERVERS]
 
 
-def _get_target_channel(channels: Sequence[TextChannel]) -> TextChannel:
-    for channel in channels:
-        if _clean_channel_name(channel.name) == CHANNEL_NAME:
+def _get_target_channel(guild: Guild) -> TextChannel | None:
+    for channel in guild.text_channels:
+        if _clean_channel_name(channel.name) == CONFIGURED_SERVERS[guild.name]:
             return channel
 
-    raise Exception("Could not find channel")
+    print(
+        f"Could not find channel '{CONFIGURED_SERVERS[guild.name]}' on server '{guild.name}'"
+    )
+    return None
 
 
-def _get_channel() -> TextChannel:
-    guild = _get_target_guild(client.guilds)
-    guild_channel = _get_target_channel(guild.text_channels)
-    channel = guild.get_channel(guild_channel.id)
-    assert isinstance(channel, TextChannel)
-    return channel
+def _get_channels() -> list[TextChannel]:
+    guilds = _get_target_guilds(client.guilds)
+
+    target_channels: list[TextChannel] = []
+
+    for guild in guilds:
+        channel = _get_target_channel(guild)
+        if channel is None:
+            continue
+
+        target_channels.append(channel)
+
+    return target_channels
 
 
 async def send_message(msg: str) -> None:
-    channel = _get_channel()
-    await channel.send(msg)
+    channels = _get_channels()
+    for channel in channels:
+        try:
+            await channel.send(msg)
+        except Exception as e:
+            print(
+                f"Failed to send message to channel {channel.name} on {channel.guild.name}"
+            )
+            print(e)
 
 
 @client.event
