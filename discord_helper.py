@@ -1,6 +1,6 @@
 from typing import Sequence
 import discord
-from discord.guild import Guild, GuildChannel
+from discord.guild import Guild
 from discord.channel import TextChannel
 import string
 
@@ -24,11 +24,14 @@ def _get_target_guilds(guilds: Sequence[Guild]) -> list[Guild]:
     return [guild for guild in guilds if guild.name in CONFIGURED_SERVERS]
 
 
-def _get_target_channel(guild: Guild) -> GuildChannel | None:
+def _get_target_channel(guild: Guild) -> TextChannel | None:
     for channel in guild.text_channels:
         if _clean_channel_name(channel.name) == CONFIGURED_SERVERS[guild.name]:
-            return guild.get_channel(channel.id)
+            return channel
 
+    print(
+        f"Could not find channel '{CONFIGURED_SERVERS[guild.name]}' on server '{guild.name}'"
+    )
     return None
 
 
@@ -40,9 +43,6 @@ def _get_channels() -> list[TextChannel]:
     for guild in guilds:
         channel = _get_target_channel(guild)
         if channel is None:
-            print(
-                f"Could not find channel {CONFIGURED_SERVERS[guild.name]} for guild {guild.name}"
-            )
             continue
 
         target_channels.append(channel)
