@@ -11,6 +11,7 @@ client = discord.Client(intents=discord.Intents.default())
 # <Server Name>: <Target Bot Channel Name>
 CONFIGURED_SERVERS: dict[str, str] = {
     "Dev Server": "general",
+    "Try Hard Wargaming": "frantic-f5-channel",
 }
 
 
