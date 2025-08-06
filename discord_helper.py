@@ -12,6 +12,7 @@ client = discord.Client(intents=discord.Intents.default())
 CONFIGURED_SERVERS: dict[str, str] = {
     "Dev Server": "general",
     "Try Hard Wargaming": "warcomm-update-f5",
+    "Battle Barn": "warcomm-updates",
 }
 
 
